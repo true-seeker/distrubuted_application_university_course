@@ -1,0 +1,3 @@
+module distrubuted_application_university_course
+
+go 1.19
