@@ -20,7 +20,8 @@ type Specialization struct {
 
 type Teacher struct {
 	gorm.Model
-	Name string
+	UnnormalizedId string
+	Name           string
 }
 
 type Course struct {
@@ -30,7 +31,6 @@ type Course struct {
 	Faculty   Faculty `gorm:"foreignKey:FacultyId;references:ID"`
 	TeacherId uint
 	Teacher   Teacher `gorm:"foreignKey:TeacherId;references:ID"`
-	StudentId uint
 }
 
 type Email struct {
@@ -45,8 +45,9 @@ type Student struct {
 	BirthDate        time.Time
 	SpecializationId uint
 	Specialization   Specialization `gorm:"foreignKey:SpecializationId;references:ID"`
-	Courses          []Course
+	Courses          []Course       `gorm:"many2many:student_courses;"`
 	Emails           []Email
+	UnnormalizedId   string
 }
 
 func migrate() {
