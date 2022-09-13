@@ -39,7 +39,14 @@ func readSqlite(dbName string) []unnormalizedStudent {
 	return uss
 }
 
+func normalizeStudent(student unnormalizedStudent) {
+
+}
+
 func main() {
 	unnormalizedStudents := readSqlite("./db.db")
 	fmt.Println(unnormalizedStudents)
+
+	normalizeStudent(unnormalizedStudents[0])
+	migrate()
 }
