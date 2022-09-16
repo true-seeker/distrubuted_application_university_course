@@ -1,4 +1,4 @@
-package main
+package orm
 
 import (
 	"gorm.io/driver/postgres"
@@ -50,7 +50,7 @@ type Student struct {
 	UnnormalizedId   string
 }
 
-func migrate() {
+func Migrate() {
 	dsn := "host=localhost user=postgres password=568219 dbname=golang port=5432 sslmode=disable TimeZone=Asia/Yekaterinburg"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
