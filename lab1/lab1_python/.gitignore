@@ -91,3 +91,4 @@ target/
 
 gaenv_lib/
 appengine_config.py
+venv
