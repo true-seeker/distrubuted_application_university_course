@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 	"lab1/dto"
 	"lab1/orm"
+	"lab1/services"
 	"strings"
 	"time"
 )
@@ -187,13 +188,20 @@ func makeImportRequest() {
 		Find(&students)
 	studentsDTO := dto.MapStudentsDTO(students)
 
-	importFromDTO(importDTO{
+	importDataDTO := dto.ImportDataDTO{
 		Faculties:       facultiesDTO,
 		Specializations: specializationsDTO,
 		Teachers:        teachersDTO,
 		Courses:         coursesDTO,
 		Emails:          emailsDTO,
 		Students:        studentsDTO,
+	}
+
+	var fields = services.MakeFieldsArray()
+
+	services.MakeImportRequest(dto.ImportDTO{
+		Data:   importDataDTO,
+		Fields: fields,
 	})
 }
 
