@@ -2,42 +2,26 @@ import openpyxl
 from datetime import datetime, date
 
 
+def get_complex_field(dt, f_name):
+    names = f_name.split('.')
+    for name in names:
+        dt = dt[name]
+    return dt
+
+
 def import_to_excel(json: dict):
     wb = openpyxl.Workbook()
     wb.remove(wb.active)
+    for field in json['fields']:
+        ws = wb.create_sheet(field['title'])
+        fields = {i['field_name']: index for index, i in enumerate(field['entity_fields'])}
+        ws.append([i['title'] for i in field['entity_fields']])
 
-    ws = wb.create_sheet('Факультеты')
-    ws.append(('Id', 'Наименование'), )
-    for row in json['faculties']:
-        ws.append((row['Id'], row['Title']))
-
-    ws = wb.create_sheet('Специализации')
-    ws.append(('Id', 'Наименование', 'Id факультета', 'Наименование факультета'), )
-    for row in json['specializations']:
-        ws.append((row['Id'], row['Title'], row['Faculty']['Id'], row['Faculty']['Title']))
-
-    ws = wb.create_sheet('Преподаватели')
-    ws.append(('Id', 'Имя'), )
-    for row in json['teachers']:
-        ws.append((row['Id'], row['Name']))
-
-    ws = wb.create_sheet('Курсы')
-    ws.append(('Id', 'Наименование', 'Id факультета', 'Наименование факультета'), )
-    for row in json['courses']:
-        ws.append((row['Id'], row['Title'], row['Faculty']['Id'], row['Faculty']['Title']))
-
-    ws = wb.create_sheet('Электронные почты')
-    ws.append(('Id', 'Почта', 'Id студента'), )
-    for row in json['emails']:
-        ws.append((row['Id'], row['Mail'], row['StudentId']))
-
-    ws = wb.create_sheet('Студенты')
-    ws.append(('Id', 'Имя', 'Дата рождения', 'Id специализации', 'Наименование специализации',
-               'Id факультета', 'Наименование факультета'), )
-    for row in json['students']:
-        ws.append((row['Id'], row['Name'], datetime.strptime(row['BirthDate'], '%Y-%m-%dT%H:%M:%S+05:00').date(),
-                   row['Specialization']['Id'], row['Specialization']['Title'], row['Specialization']['Faculty']['Id'],
-                   row['Specialization']['Faculty']['Title']))
+        for row in json['data'][field['field_name']]:
+            data = [None for _ in range(len(field['entity_fields']))]
+            for entity_field in field['entity_fields']:
+                data[fields[entity_field['field_name']]] = get_complex_field(row, entity_field['field_name'])
+            ws.append(data)
 
     wb.save(f'{str(datetime.now()).replace(":", "-")}.xlsx')
 
