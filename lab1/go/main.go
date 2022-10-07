@@ -206,10 +206,10 @@ func makeImportRequest() {
 }
 
 func main() {
-	//orm.Migrate()
-	//unnormalizedStudents := readSqlite("./db.db")
-	//
-	//normalizeStudents(unnormalizedStudents)
+	orm.Migrate()
+	unnormalizedStudents := readSqlite("./db.db")
+
+	normalizeStudents(unnormalizedStudents)
 
 	makeImportRequest()
 }
