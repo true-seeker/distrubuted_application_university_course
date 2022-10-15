@@ -1,0 +1,51 @@
+package services
+
+import (
+	"bytes"
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
+	"io"
+	"log"
+	"net/http"
+)
+
+func GetNotionCredentials(code string) (response string) {
+	redirectUrl := "http://localhost/notion_auth"
+	tokenUrl := "https://api.notion.com/v1/oauth/token"
+	clientId := "710003c6-cbb2-4b1f-b979-248a38a1d2db"
+	clientSecret := "secret_uHVfLlf6C25XttuF6jB3lL08NYp9YCHgu8EsgAoU3QF"
+	credentials := fmt.Sprintf("%s:%s", clientId, clientSecret)
+	b64Credentials := base64.StdEncoding.EncodeToString([]byte(credentials))
+	client := &http.Client{}
+
+	values := map[string]string{
+		"code":         code,
+		"grant_type":   "authorization_code",
+		"redirect_uri": redirectUrl,
+	}
+
+	jsonData, err := json.Marshal(values)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	req, err := http.NewRequest("POST", tokenUrl, bytes.NewBuffer(jsonData))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	req.Header.Set("Authorization", fmt.Sprintf("Basic %s", b64Credentials))
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	response = string(body)
+	return
+}
