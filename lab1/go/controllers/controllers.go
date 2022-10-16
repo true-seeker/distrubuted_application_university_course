@@ -20,5 +20,6 @@ func Controllers() {
 	r.GET("/", services.Index)
 	r.GET("/notion_auth", services.NotionAuthRedirect)
 	r.GET("/logout", services.Logout)
+	r.GET("/database/:id", services.Database)
 	r.Run(":80") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }

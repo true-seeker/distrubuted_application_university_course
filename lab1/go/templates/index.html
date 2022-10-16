@@ -4,15 +4,20 @@
 <body class="d-flex h-100 text-center text-bg-dark">
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     {{ template "header" . }}
+    {{ $databases := .databases }}
+
     <main class="px-3">
-        {{ .code }}
         {{ if .user }}
-        <h1>Cover your page.</h1>
-        <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the
-            text, and add your own fullscreen background photo to make it your own.</p>
-        <p class="lead">
-            <a href="#" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Learn more</a>
-        </p>
+        <h2>Databases:</h2>
+        <ul>
+            {{ range $database := $databases }}
+            {{ $titles := $database.Title }}
+            <p>{{ range $title := $titles}}
+            <li><a class="nav-link" href="/database/{{$database.Id}}" style="text-align: left">
+                {{$title.text.content}} </a></li>
+            {{end }}</p>
+            {{ end }}
+        </ul>
         {{ else }}
         <p class="lead">Please login to continue</p>
         <p class="lead">
