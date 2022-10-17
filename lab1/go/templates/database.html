@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+{{ template "head" . }}
+<body class="d-flex h-100 text-center text-bg-dark">
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    {{ template "header" . }}
+    {{ $results := .results }}
+
+    <main class="px-3">
+        {{ if .user }}
+        <h2>Database:</h2>
+        <table class="w-100">
+            <thead class="fw-bold bg-secondary">
+            <tr>
+                <td>Delete</td>
+                {{ range $key, $value := .fields }}
+                <td style="border-color: #86989B; border-width: 1px"> {{ $key }}</td>
+                {{ end }}
+            </tr>
+            </thead>
+            <tbody>
+            {{ range $result := $results }}
+            <tr>
+                <td>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-x-lg" style="cursor: pointer" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                    </svg>
+                </td>
+                {{ range $key, $value := $result.Properties}}
+                {{ if eq $value.type "number"}}
+                <td>
+                    <input type="number" value="{{ $value.number }}">
+                </td>
+
+                {{ else if eq $value.type "checkbox"}}
+                <td>
+                    <input type="checkbox" {{ if $value.checkbox }} checked {{end}}>
+                </td>
+
+                {{ else if eq $value.type "title" }}
+                {{ range $title := $value.title}}
+                <td>
+                    <input type="text" value="{{ $title.text.content }}">
+                </td>
+                {{else}}
+                <td>
+                    <input type="text" value="">
+                </td>
+                {{end}}
+
+                {{ else if eq $value.type "date" }}
+                <td>
+                    <input type="date" value="{{$value.date.start}}">
+                </td>
+
+                {{ end }}
+                <!--                <td style="border-color: #86989B; border-width: 1px">{{ $value }}</td>-->
+                {{ end }}
+            </tr>
+            {{ end }}
+            <tr></tr>
+            <td colspan="50">Add:</td>
+            <tr>
+                <td>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                    </svg>
+                </td>
+                {{ range $key, $value := .fields }}
+                {{ if eq $value.type "number" }}
+                <td>
+                    <input type="number" value="">
+                </td>
+
+                {{ else if eq $value.type "checkbox" }}
+                <td>
+                    <input type="checkbox">
+                </td>
+                {{ else if eq $value.type "title" }}
+                <td>
+                    <input type="text">
+                </td>
+                {{ else if eq $value.type "date" }}
+                <td>
+                    <input type="date">
+                </td>
+                {{ end }}
+                {{ end }}
+            </tr>
+            </tbody>
+        </table>
+
+        {{ else }}
+        <p class="lead">Please login to continue</p>
+        <p class="lead">
+            <a href="{{.authUrl}}" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Login</a>
+        </p>
+        {{ end }}
+    </main>
+</div>
+{{ template "footer_scripts" . }}
+</body>
+</html>

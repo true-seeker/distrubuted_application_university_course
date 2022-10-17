@@ -80,3 +80,30 @@ func (n *NotionAPI) FindDatabases() (dto.NotionSearchDTO, error) {
 
 	return searchDTO, nil
 }
+
+func (n *NotionAPI) GetDatabaseById(id string) (dto.NotionSearchDTO, error) {
+	getDatabaseByIdUrl := fmt.Sprintf("https://api.notion.com/v1/databases/%s/query", id)
+	searchDTO := dto.NotionSearchDTO{}
+	client := &http.Client{}
+
+	req, err := http.NewRequest("POST", getDatabaseByIdUrl, nil)
+	if err != nil {
+		return dto.NotionSearchDTO{}, err
+	}
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", n.accessToken))
+	req.Header.Set("Notion-Version", "2022-06-28")
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := client.Do(req)
+	if err != nil {
+		return dto.NotionSearchDTO{}, err
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return dto.NotionSearchDTO{}, err
+	}
+	err = json.Unmarshal(body, &searchDTO)
+
+	//fmt.Println(searchDTO)
+	return searchDTO, nil
+}

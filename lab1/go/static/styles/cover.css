@@ -8,7 +8,8 @@
 body {
     text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
 }
-header{
+
+header {
 
 }
 
@@ -84,4 +85,9 @@ header{
     text-align: center;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
+}
+
+td {
+    border-color: #86989B;
+    border-width: 1px;
 }
