@@ -5,7 +5,7 @@ import (
 )
 
 func WriteFile(data []byte) error {
-	err := os.WriteFile("test.txt", data, 0644)
+	err := os.WriteFile(CredentialsFileName, data, 0644)
 	if err != nil {
 		return err
 	}
@@ -13,7 +13,7 @@ func WriteFile(data []byte) error {
 }
 
 func ReadFile() ([]byte, error) {
-	data, err := os.ReadFile("test.txt")
+	data, err := os.ReadFile(CredentialsFileName)
 	if err != nil {
 		return nil, err
 	}
@@ -21,7 +21,7 @@ func ReadFile() ([]byte, error) {
 }
 
 func DeleteFile() error {
-	err := os.Remove("test.txt")
+	err := os.Remove(CredentialsFileName)
 	if err != nil {
 		return err
 	}

@@ -15,16 +15,18 @@ type NotionAPI struct {
 	user        string
 }
 
+const AESKey = "the-key-has-to-be-32-bytes-long!"
+
 func NewNotionAPI() (NotionAPI, error) {
 	notionAPI := NotionAPI{}
 	var notionCredentials dto.NotionCredentialsDTO
-	a := AES{key: []byte("the-key-has-to-be-32-bytes-long!")}
-	encrypted_data, err := ReadFile()
+	a := AES{key: []byte(AESKey)}
+	encryptedData, err := ReadFile()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	decrypted, err := a.Decrypt(encrypted_data)
+	decrypted, err := a.Decrypt(encryptedData)
 	if err != nil {
 		log.Fatal(err)
 	}

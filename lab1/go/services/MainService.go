@@ -12,8 +12,11 @@ import (
 	"strings"
 )
 
+var AuthUrl = fmt.Sprintf("https://api.notion.com/v1/oauth/authorize?client_id=%s&response_type=code&owner=user&redirect_uri=%s", clientId, redirectUrl)
+var CredentialsFileName = "test.txt"
+
 func Index(c *gin.Context) {
-	if _, err := os.Stat("test.txt"); err == nil {
+	if _, err := os.Stat(CredentialsFileName); err == nil {
 
 		api, err := NewNotionAPI()
 		if err != nil {
@@ -33,7 +36,7 @@ func Index(c *gin.Context) {
 	} else if errors.Is(err, os.ErrNotExist) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"title":   "Lab1",
-			"authUrl": "https://api.notion.com/v1/oauth/authorize?client_id=710003c6-cbb2-4b1f-b979-248a38a1d2db&response_type=code&owner=user&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fnotion_auth",
+			"authUrl": AuthUrl,
 		})
 	}
 }
@@ -84,7 +87,7 @@ func Database(c *gin.Context) {
 		}
 	}
 
-	if _, err := os.Stat("test.txt"); err == nil {
+	if _, err := os.Stat(CredentialsFileName); err == nil {
 
 		c.HTML(http.StatusOK, "database.html", gin.H{
 			"title":      "Lab1.Database",
@@ -97,7 +100,7 @@ func Database(c *gin.Context) {
 	} else if errors.Is(err, os.ErrNotExist) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"title":   "Lab1.Database",
-			"authUrl": "https://api.notion.com/v1/oauth/authorize?client_id=710003c6-cbb2-4b1f-b979-248a38a1d2db&response_type=code&owner=user&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fnotion_auth",
+			"authUrl": AuthUrl,
 		})
 	}
 }

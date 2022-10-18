@@ -10,11 +10,12 @@ import (
 	"net/http"
 )
 
+var redirectUrl = "http://localhost:8080/notion_auth"
+var tokenUrl = "https://api.notion.com/v1/oauth/token"
+var clientId = "710003c6-cbb2-4b1f-b979-248a38a1d2db"
+var clientSecret = "secret_OFmEcyjLzlXPUHwgQklloBT2TeT64fVkEjIJFVQ91Pk"
+
 func GetNotionCredentials(code string) (response string) {
-	redirectUrl := "http://localhost:8080/notion_auth"
-	tokenUrl := "https://api.notion.com/v1/oauth/token"
-	clientId := "710003c6-cbb2-4b1f-b979-248a38a1d2db"
-	clientSecret := "secret_OFmEcyjLzlXPUHwgQklloBT2TeT64fVkEjIJFVQ91Pk"
 	credentials := fmt.Sprintf("%s:%s", clientId, clientSecret)
 	b64Credentials := base64.StdEncoding.EncodeToString([]byte(credentials))
 	client := &http.Client{}
