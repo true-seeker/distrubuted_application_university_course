@@ -22,5 +22,7 @@ func Controllers() {
 	r.GET("/logout", services.Logout)
 	r.GET("/database/:id", services.Database)
 	r.POST("/page/:id/delete", services.PageDelete)
+	r.POST("/page/add", services.PageAdd)
+	r.POST("/page/:id/update", services.PageUpdate)
 	r.Run(":8080")
 }

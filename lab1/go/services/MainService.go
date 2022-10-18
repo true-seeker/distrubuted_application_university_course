@@ -6,7 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
+	"strconv"
+	"strings"
 )
 
 func Index(c *gin.Context) {
@@ -114,4 +117,77 @@ func PageDelete(c *gin.Context) {
 		log.Fatal(err)
 	}
 	c.Redirect(http.StatusFound, fmt.Sprintf("/database/%s", databaseId))
+}
+
+func PageAdd(c *gin.Context) {
+	databaseId := c.Request.FormValue("databaseId")
+	delete(c.Request.PostForm, "databaseId")
+	properties := parsePage(c.Request.PostForm)
+
+	api, err := NewNotionAPI()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = api.AddPage(properties, databaseId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c.Redirect(http.StatusFound, fmt.Sprintf("/database/%s", databaseId))
+}
+
+func PageUpdate(c *gin.Context) {
+	id := c.Param("id")
+	databaseId := c.Request.FormValue("databaseId")
+	delete(c.Request.PostForm, "databaseId")
+	properties := parsePage(c.Request.PostForm)
+
+	api, err := NewNotionAPI()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = api.UpdatePage(properties, id)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c.Redirect(http.StatusFound, fmt.Sprintf("/database/%s", databaseId))
+
+}
+
+func parsePage(r url.Values) map[string]interface{} {
+	properties := map[string]interface{}{}
+	for key, value := range r {
+		fieldName := strings.Split(key, "___")[0]
+		fieldType := strings.Split(key, "___")[1]
+		fmt.Println(fieldName, fieldType, value)
+		if fieldType == "number" && value[0] != "" {
+			number, _ := strconv.Atoi(value[0])
+			properties[fieldName] = map[string]interface{}{
+				"number": number,
+			}
+		} else if fieldType == "checkbox" {
+			properties[fieldName] = map[string]interface{}{
+				"checkbox": true,
+			}
+		} else if fieldType == "title" {
+			properties[fieldName] = map[string][]map[string]interface{}{
+				"title": {{"type": "text",
+					"text": map[string]interface{}{
+						"content": value[0],
+					},
+				},
+				},
+			}
+		} else if fieldType == "date" {
+			properties[fieldName] = map[string]interface{}{
+				"date": map[string]string{
+					"start": value[0],
+				},
+			}
+		}
+	}
+	return properties
 }

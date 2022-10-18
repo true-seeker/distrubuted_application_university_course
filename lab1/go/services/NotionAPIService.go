@@ -108,9 +108,8 @@ func (n *NotionAPI) GetDatabaseById(id string) (dto.NotionSearchDTO, error) {
 	return searchDTO, nil
 }
 
-func (n *NotionAPI) DeletePageById(id string) error {
-	deletePageByIdUrl := fmt.Sprintf("https://api.notion.com/v1/pages/%s", id)
-	fmt.Println(deletePageByIdUrl)
+func (n *NotionAPI) DeletePageById(pageId string) error {
+	deletePageByIdUrl := fmt.Sprintf("https://api.notion.com/v1/pages/%s", pageId)
 	client := &http.Client{}
 
 	values := map[string]bool{
@@ -123,6 +122,72 @@ func (n *NotionAPI) DeletePageById(id string) error {
 	}
 
 	req, err := http.NewRequest("PATCH", deletePageByIdUrl, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", n.accessToken))
+	req.Header.Set("Notion-Version", "2022-06-28")
+	req.Header.Set("Content-Type", "application/json")
+	_, err = client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (n *NotionAPI) AddPage(properties map[string]interface{}, databaseId string) error {
+	addPageUrl := fmt.Sprintf("https://api.notion.com/v1/pages/")
+	client := &http.Client{}
+
+	values := map[string]interface{}{
+		"parent": map[string]string{
+			"database_id": databaseId,
+		},
+		"properties": properties,
+	}
+
+	jsonData, err := json.Marshal(values)
+	if err != nil {
+		return err
+	}
+	fmt.Println(string(jsonData))
+
+	req, err := http.NewRequest("POST", addPageUrl, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", n.accessToken))
+	req.Header.Set("Notion-Version", "2022-06-28")
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	fmt.Println(string(body))
+	return nil
+}
+
+func (n *NotionAPI) UpdatePage(properties map[string]interface{}, pageId string) error {
+	updatePageUrl := fmt.Sprintf("https://api.notion.com/v1/pages/%s", pageId)
+	client := &http.Client{}
+
+	values := map[string]interface{}{
+		"properties": properties,
+	}
+
+	jsonData, err := json.Marshal(values)
+	if err != nil {
+		return err
+	}
+	fmt.Println(string(jsonData))
+
+	req, err := http.NewRequest("PATCH", updatePageUrl, bytes.NewBuffer(jsonData))
 	if err != nil {
 		return err
 	}

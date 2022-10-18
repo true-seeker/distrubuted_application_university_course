@@ -23,44 +23,48 @@
             {{ range $result := $results }}
             <tr>
                 <td>
-                    <form action="/page/{{$result.Id}}/delete" method="post" >
+                    <form action="/page/{{$result.Id}}/delete" method="post">
                         <button type="submit" class="btn btn-secondary btn-sm my-1">Delete</button>
                         <input name="databaseId" value="{{$databaseId}}" hidden>
                     </form>
                 </td>
                 {{ range $key, $value := $result.Properties}}
                 {{ if eq $value.type "number"}}
-                <td>
-                    <input type="number" value="{{ $value.number }}">
-                </td>
+                <form action="/page/{{ $result.Id }}/update" method="post">
 
-                {{ else if eq $value.type "checkbox"}}
-                <td>
-                    <input type="checkbox" {{ if $value.checkbox }} checked {{end}}>
-                </td>
+                    <td>
+                        <input type="number" value="{{ $value.number }}" name="{{ $key }}___{{ $value.type }}">
+                    </td>
 
-                {{ else if eq $value.type "title" }}
-                {{ range $title := $value.title}}
-                <td>
-                    <input type="text" value="{{ $title.text.content }}">
-                </td>
-                {{else}}
-                <td>
-                    <input type="text" value="">
-                </td>
-                {{end}}
+                    {{ else if eq $value.type "checkbox"}}
+                    <td>
+                        <input type="checkbox" {{ if $value.checkbox }} checked {{end}}
+                               name="{{ $key }}___{{ $value.type }}">
+                    </td>
 
-                {{ else if eq $value.type "date" }}
-                <td>
-                    <input type="date" value="{{$value.date.start}}">
-                </td>
+                    {{ else if eq $value.type "title" }}
+                    {{ range $title := $value.title}}
+                    <td>
+                        <input type="text" value="{{ $title.text.content }}" name="{{ $key }}___{{ $value.type }}">
+                    </td>
+                    {{else}}
+                    <td>
+                        <input type="text" value="" name="{{ $key }}___{{ $value.type }}">
+                    </td>
+                    {{end}}
 
-                {{ end }}
-                <!--                <td style="border-color: #86989B; border-width: 1px">{{ $value }}</td>-->
-                {{ end }}
-                <td>
-                    <button type="button" class="btn btn-secondary btn-sm my-1">Update</button>
-                </td>
+                    {{ else if eq $value.type "date" }}
+                    <td>
+                        <input type="date" value="{{$value.date.start}}" name="{{ $key }}___{{ $value.type }}">
+                    </td>
+
+                    {{ end }}
+                    {{ end }}
+                    <td>
+                        <button type="submit" class="btn btn-secondary btn-sm my-1">Update</button>
+                    </td>
+                    <input name="databaseId" value="{{$databaseId}}" hidden>
+                </form>
             </tr>
             {{ end }}
             <tr></tr>
@@ -69,28 +73,31 @@
                 <td>
                 </td>
                 {{ range $key, $value := .fields }}
-                {{ if eq $value.type "number" }}
-                <td>
-                    <input type="number" value="">
-                </td>
+                <form action="/page/add" method="post">
+                    {{ if eq $value.type "number" }}
+                    <td>
+                        <input type="number" name="{{ $key }}___{{ $value.type }}" value="">
+                    </td>
 
-                {{ else if eq $value.type "checkbox" }}
-                <td>
-                    <input type="checkbox">
-                </td>
-                {{ else if eq $value.type "title" }}
-                <td>
-                    <input type="text">
-                </td>
-                {{ else if eq $value.type "date" }}
-                <td>
-                    <input type="date">
-                </td>
-                {{ end }}
-                {{ end }}
-                <td>
-                    <button type="button" class="btn btn-secondary btn-sm my-1">Add</button>
-                </td>
+                    {{ else if eq $value.type "checkbox" }}
+                    <td>
+                        <input type="checkbox" name="{{ $key }}___{{ $value.type }}">
+                    </td>
+                    {{ else if eq $value.type "title" }}
+                    <td>
+                        <input type="text" name="{{ $key }}___{{ $value.type }}">
+                    </td>
+                    {{ else if eq $value.type "date" }}
+                    <td>
+                        <input type="date" name="{{ $key }}___{{ $value.type }}">
+                    </td>
+                    {{ end }}
+                    {{ end }}
+                    <td>
+                        <button type="submit" class="btn btn-secondary btn-sm my-1">Add</button>
+                    </td>
+                    <input name="databaseId" value="{{$databaseId}}" hidden>
+                </form>
             </tr>
             </tbody>
         </table>
