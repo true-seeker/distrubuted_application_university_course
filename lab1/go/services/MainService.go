@@ -30,7 +30,7 @@ func Index(c *gin.Context) {
 	} else if errors.Is(err, os.ErrNotExist) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"title":   "Lab1",
-			"authUrl": "https://api.notion.com/v1/oauth/authorize?client_id=710003c6-cbb2-4b1f-b979-248a38a1d2db&response_type=code&owner=user&redirect_uri=http%3A%2F%2Flocalhost%2Fnotion_auth",
+			"authUrl": "https://api.notion.com/v1/oauth/authorize?client_id=710003c6-cbb2-4b1f-b979-248a38a1d2db&response_type=code&owner=user&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fnotion_auth",
 		})
 	}
 }
@@ -75,9 +75,7 @@ func Database(c *gin.Context) {
 
 	fields := map[string]interface{}{}
 
-	fmt.Println(searchDto)
 	for _, result := range searchDto.Results {
-		fmt.Println("=============")
 		for key, value := range result.Properties.(map[string]interface{}) {
 			fields[key] = value
 		}
@@ -86,16 +84,34 @@ func Database(c *gin.Context) {
 	if _, err := os.Stat("test.txt"); err == nil {
 
 		c.HTML(http.StatusOK, "database.html", gin.H{
-			"title":   "Lab1.Database",
-			"user":    api.user,
-			"results": searchDto.Results,
-			"fields":  fields,
+			"title":      "Lab1.Database",
+			"user":       api.user,
+			"results":    searchDto.Results,
+			"fields":     fields,
+			"databaseId": id,
 		})
 
 	} else if errors.Is(err, os.ErrNotExist) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"title":   "Lab1.Database",
-			"authUrl": "https://api.notion.com/v1/oauth/authorize?client_id=710003c6-cbb2-4b1f-b979-248a38a1d2db&response_type=code&owner=user&redirect_uri=http%3A%2F%2Flocalhost%2Fnotion_auth",
+			"authUrl": "https://api.notion.com/v1/oauth/authorize?client_id=710003c6-cbb2-4b1f-b979-248a38a1d2db&response_type=code&owner=user&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fnotion_auth",
 		})
 	}
+}
+
+func PageDelete(c *gin.Context) {
+	id := c.Param("id")
+	databaseId := c.Request.FormValue("databaseId")
+
+	fmt.Println(databaseId)
+	api, err := NewNotionAPI()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = api.DeletePageById(id)
+	if err != nil {
+		log.Fatal(err)
+	}
+	c.Redirect(http.StatusFound, fmt.Sprintf("/database/%s", databaseId))
 }

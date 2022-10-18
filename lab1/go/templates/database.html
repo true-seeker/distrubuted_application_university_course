@@ -5,7 +5,7 @@
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     {{ template "header" . }}
     {{ $results := .results }}
-
+    {{ $databaseId := .databaseId }}
     <main class="px-3">
         {{ if .user }}
         <h2>Database:</h2>
@@ -16,16 +16,17 @@
                 {{ range $key, $value := .fields }}
                 <td style="border-color: #86989B; border-width: 1px"> {{ $key }}</td>
                 {{ end }}
+                <td>Action</td>
             </tr>
             </thead>
             <tbody>
             {{ range $result := $results }}
             <tr>
                 <td>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-x-lg" style="cursor: pointer" viewBox="0 0 16 16">
-                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
-                    </svg>
+                    <form action="/page/{{$result.Id}}/delete" method="post" >
+                        <button type="submit" class="btn btn-secondary btn-sm my-1">Delete</button>
+                        <input name="databaseId" value="{{$databaseId}}" hidden>
+                    </form>
                 </td>
                 {{ range $key, $value := $result.Properties}}
                 {{ if eq $value.type "number"}}
@@ -57,16 +58,15 @@
                 {{ end }}
                 <!--                <td style="border-color: #86989B; border-width: 1px">{{ $value }}</td>-->
                 {{ end }}
+                <td>
+                    <button type="button" class="btn btn-secondary btn-sm my-1">Update</button>
+                </td>
             </tr>
             {{ end }}
             <tr></tr>
             <td colspan="50">Add:</td>
             <tr>
                 <td>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
-                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                    </svg>
                 </td>
                 {{ range $key, $value := .fields }}
                 {{ if eq $value.type "number" }}
@@ -88,6 +88,9 @@
                 </td>
                 {{ end }}
                 {{ end }}
+                <td>
+                    <button type="button" class="btn btn-secondary btn-sm my-1">Add</button>
+                </td>
             </tr>
             </tbody>
         </table>

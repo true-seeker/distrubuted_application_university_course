@@ -107,3 +107,37 @@ func (n *NotionAPI) GetDatabaseById(id string) (dto.NotionSearchDTO, error) {
 	//fmt.Println(searchDTO)
 	return searchDTO, nil
 }
+
+func (n *NotionAPI) DeletePageById(id string) error {
+	deletePageByIdUrl := fmt.Sprintf("https://api.notion.com/v1/pages/%s", id)
+	fmt.Println(deletePageByIdUrl)
+	client := &http.Client{}
+
+	values := map[string]bool{
+		"archived": true,
+	}
+
+	jsonData, err := json.Marshal(values)
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequest("PATCH", deletePageByIdUrl, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", n.accessToken))
+	req.Header.Set("Notion-Version", "2022-06-28")
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	fmt.Println(string(body))
+	return nil
+}
