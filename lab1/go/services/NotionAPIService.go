@@ -106,7 +106,6 @@ func (n *NotionAPI) GetDatabaseById(id string) (dto.NotionSearchDTO, error) {
 	}
 	err = json.Unmarshal(body, &searchDTO)
 
-	//fmt.Println(searchDTO)
 	return searchDTO, nil
 }
 
@@ -153,7 +152,6 @@ func (n *NotionAPI) AddPage(properties map[string]interface{}, databaseId string
 	if err != nil {
 		return err
 	}
-	fmt.Println(string(jsonData))
 
 	req, err := http.NewRequest("POST", addPageUrl, bytes.NewBuffer(jsonData))
 	if err != nil {
@@ -167,11 +165,10 @@ func (n *NotionAPI) AddPage(properties map[string]interface{}, databaseId string
 		return err
 	}
 
-	body, err := io.ReadAll(resp.Body)
+	_, err = io.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
-	fmt.Println(string(body))
 	return nil
 }
 
@@ -187,7 +184,6 @@ func (n *NotionAPI) UpdatePage(properties map[string]interface{}, pageId string)
 	if err != nil {
 		return err
 	}
-	fmt.Println(string(jsonData))
 
 	req, err := http.NewRequest("PATCH", updatePageUrl, bytes.NewBuffer(jsonData))
 	if err != nil {
@@ -201,10 +197,9 @@ func (n *NotionAPI) UpdatePage(properties map[string]interface{}, pageId string)
 		return err
 	}
 
-	body, err := io.ReadAll(resp.Body)
+	_, err = io.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
-	fmt.Println(string(body))
 	return nil
 }

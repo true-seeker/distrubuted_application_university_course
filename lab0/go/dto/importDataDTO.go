@@ -3,7 +3,6 @@ package dto
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -24,7 +23,6 @@ func importFromDataDTO(dto ImportDataDTO) int {
 
 	post, err := http.Post("http://localhost:80/excel_import", "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
-		fmt.Println(err)
 		panic("Failed to post")
 
 	}

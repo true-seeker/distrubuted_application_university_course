@@ -29,9 +29,8 @@
                     </form>
                 </td>
                 {{ range $key, $value := $result.Properties}}
-                {{ if eq $value.type "number"}}
                 <form action="/page/{{ $result.Id }}/update" method="post">
-
+                {{ if eq $value.type "number"}}
                     <td>
                         <input type="number" value="{{ $value.number }}" name="{{ $key }}___{{ $value.type }}">
                     </td>

@@ -109,7 +109,6 @@ func PageDelete(c *gin.Context) {
 	id := c.Param("id")
 	databaseId := c.Request.FormValue("databaseId")
 
-	fmt.Println(databaseId)
 	api, err := NewNotionAPI()
 	if err != nil {
 		log.Fatal(err)
@@ -165,7 +164,6 @@ func parsePage(r url.Values) map[string]interface{} {
 	for key, value := range r {
 		fieldName := strings.Split(key, "___")[0]
 		fieldType := strings.Split(key, "___")[1]
-		fmt.Println(fieldName, fieldType, value)
 		if fieldType == "number" && value[0] != "" {
 			number, _ := strconv.Atoi(value[0])
 			properties[fieldName] = map[string]interface{}{
