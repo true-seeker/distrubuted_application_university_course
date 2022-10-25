@@ -9,9 +9,10 @@ import (
 	"time"
 )
 
+var PostgresConnectionString = "host=localhost user=postgres password=568219 dbname=golang port=5432 sslmode=disable TimeZone=Asia/Yekaterinburg"
+
 func NormalizeStudents(students []dto.UnnormalizedStudent) {
-	dsn := "host=localhost user=postgres password=568219 dbname=golang port=5432 sslmode=disable TimeZone=Asia/Yekaterinburg"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(PostgresConnectionString), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -114,8 +115,7 @@ func normalizeStudent(student dto.UnnormalizedStudent, db *gorm.DB) {
 }
 
 func SendNormalizedDataToImport() {
-	dsn := "host=localhost user=postgres password=568219 dbname=golang port=5432 sslmode=disable TimeZone=Asia/Yekaterinburg"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(PostgresConnectionString), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
