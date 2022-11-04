@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"lab2/utils/orm"
 	"lab2/utils/server/services"
 )
 
@@ -11,6 +12,7 @@ func main() {
 	encryptionType := flag.String("e", "aes", "Encryption type")
 
 	fmt.Println(*communicationType, *encryptionType)
+	orm.Migrate()
 
 	if *communicationType == "queue" {
 		services.AcceptDataFromQueue(*encryptionType)

@@ -14,21 +14,17 @@ func normalizeStudent(student dto.UnnormalizedStudent) {
 
 	var faculty orm.Faculty
 	db.First(&faculty, "Title = ?", student.Faculty)
-	//if faculty.ID == 0 {
 	db.Create(&orm.Faculty{
 		Title: student.Faculty,
 	})
-	//}
 	db.First(&faculty, "Title = ?", student.Faculty)
 
 	var specialization orm.Specialization
 	db.First(&specialization, "Title = ?", student.Specialization)
-	//if specialization.ID == 0 {
 	db.Create(&orm.Specialization{
 		FacultyId: faculty.ID,
 		Title:     student.Specialization,
 	})
-	//}
 	db.First(&specialization, "Title = ?", student.Specialization)
 
 	teachers := strings.Split(student.Teachers, "|")
@@ -38,12 +34,10 @@ func normalizeStudent(student dto.UnnormalizedStudent) {
 		teacherData := strings.Split(teachers[i], ",")
 
 		db.First(&teacher, "unnormalized_id = ?", teacherData[0])
-		//if teacher.ID == 0 {
 		db.Create(&orm.Teacher{
 			UnnormalizedId: teacherData[0],
 			Name:           teacherData[1],
 		})
-		//}
 		db.First(&teacher, "unnormalized_id = ?", teacherData[0])
 		ORMTearchers = append(ORMTearchers, teacher)
 	}
@@ -53,21 +47,18 @@ func normalizeStudent(student dto.UnnormalizedStudent) {
 	for i := 0; i < len(courses); i++ {
 		var course orm.Course
 		db.First(&course, "Title = ?", courses[i])
-		//if course.ID == 0 {
 		db.Create(&orm.Course{
 			Title:     courses[i],
 			FacultyId: faculty.ID,
 			TeacherId: ORMTearchers[i].ID,
 		})
 		db.First(&course, "Title = ?", courses[i])
-		//}
 		ORMcourses = append(ORMcourses, course)
 	}
 
 	studentData := strings.Split(student.Name, ",")
 	var ORMStudent orm.Student
 	db.First(&ORMStudent, "unnormalized_id = ?", studentData[0])
-	//if ORMStudent.ID == 0 {
 	parsedDate, _ := time.Parse("01-02-2006", student.BirthDate)
 	db.Create(&orm.Student{
 		Name:             studentData[1],
@@ -76,7 +67,6 @@ func normalizeStudent(student dto.UnnormalizedStudent) {
 		UnnormalizedId:   studentData[0],
 		Courses:          ORMcourses,
 	})
-	//}
 	db.First(&ORMStudent, "unnormalized_id = ?", studentData[0])
 
 	emails := strings.Split(student.Emails, "|")
@@ -84,13 +74,11 @@ func normalizeStudent(student dto.UnnormalizedStudent) {
 	for i := 0; i < len(emails); i++ {
 		var email orm.Email
 		db.First(&email, "Mail = ?", emails[i])
-		//if email.ID == 0 {
 		db.Create(&orm.Email{
 			Mail:      emails[i],
 			StudentId: ORMStudent.ID,
 		})
 		db.First(&email, "Mail = ?", emails[i])
-		//}
 		ORMemails = append(ORMemails, email)
 	}
 	ORMStudent.Emails = ORMemails
