@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"lab2/server/services"
 	"lab2/utils/orm"
-	"lab2/utils/server/services"
 )
 
 func main() {
