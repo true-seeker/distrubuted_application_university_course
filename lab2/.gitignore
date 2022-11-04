@@ -1,2 +1,2 @@
-go/client/client
-go/server/server
+utils/client/client
+utils/server/server

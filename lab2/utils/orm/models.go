@@ -3,9 +3,10 @@ package orm
 import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"lab2/services"
 	"time"
 )
+
+var PostgresConnectionString = "host=localhost user=postgres password=568219 dbname=golang port=5432 sslmode=disable TimeZone=Asia/Yekaterinburg"
 
 type Faculty struct {
 	gorm.Model
@@ -52,7 +53,7 @@ type Student struct {
 }
 
 func Migrate() {
-	db, err := gorm.Open(postgres.Open(services.PostgresConnectionString), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(PostgresConnectionString), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}

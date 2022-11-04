@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/mattn/go-sqlite3 v1.14.15
+	github.com/rabbitmq/amqp091-go v1.5.0
 	gorm.io/driver/postgres v1.3.9
 	gorm.io/gorm v1.23.8
 )

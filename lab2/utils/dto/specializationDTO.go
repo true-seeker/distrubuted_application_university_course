@@ -1,6 +1,6 @@
 package dto
 
-import "lab2/orm"
+import "lab2/utils/orm"
 
 type SpecializationDTO struct {
 	Id      uint

@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"lab2/client/services"
 )
 
 func main() {
@@ -10,4 +11,8 @@ func main() {
 	encryptionType := flag.String("e", "aes", "Encryption type")
 
 	fmt.Println(*communicationType, *encryptionType)
+
+	if *communicationType == "queue" {
+		services.SendDataViaQueue(*encryptionType)
+	}
 }

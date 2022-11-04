@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"lab2/orm"
+	"lab2/utils/orm"
 	"time"
 )
 

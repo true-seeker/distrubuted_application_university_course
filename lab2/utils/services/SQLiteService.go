@@ -2,7 +2,8 @@ package services
 
 import (
 	"database/sql"
-	"lab2/dto"
+	_ "github.com/mattn/go-sqlite3"
+	"lab2/utils/dto"
 )
 
 func ReadSqlite(dbName string) []dto.UnnormalizedStudent {

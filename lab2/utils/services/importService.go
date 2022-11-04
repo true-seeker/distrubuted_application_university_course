@@ -3,7 +3,7 @@ package services
 import (
 	"bytes"
 	"encoding/json"
-	"lab2/dto"
+	"lab2/utils/dto"
 	"net/http"
 )
 

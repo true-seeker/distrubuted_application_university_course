@@ -3,16 +3,14 @@ package services
 import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"lab2/dto"
-	"lab2/orm"
+	"lab2/utils/dto"
+	"lab2/utils/orm"
 	"strings"
 	"time"
 )
 
-var PostgresConnectionString = "host=localhost user=postgres password=568219 dbname=golang port=5432 sslmode=disable TimeZone=Asia/Yekaterinburg"
-
 func NormalizeStudents(students []dto.UnnormalizedStudent) {
-	db, err := gorm.Open(postgres.Open(PostgresConnectionString), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(orm.PostgresConnectionString), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -115,7 +113,7 @@ func normalizeStudent(student dto.UnnormalizedStudent, db *gorm.DB) {
 }
 
 func SendNormalizedDataToImport() {
-	db, err := gorm.Open(postgres.Open(PostgresConnectionString), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(orm.PostgresConnectionString), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
