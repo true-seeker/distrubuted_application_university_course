@@ -5,6 +5,11 @@ import (
 )
 
 func SendDataViaQueue(encryptionType string) {
-	unnormalizedStudents := services.ReadSqlite("db.db")
+	unnormalizedStudents := services.ReadSqlite("../db.db")
 	services.PutUnnormalizedDataToQueue(unnormalizedStudents)
+}
+
+func SendDataViaSocket(encryptionType string) {
+	unnormalizedStudents := services.ReadSqlite("../db.db")
+	services.PutUnnormalizedDataToSocket(unnormalizedStudents)
 }
