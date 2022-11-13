@@ -16,7 +16,7 @@ func failOnError(err error, msg string) {
 		log.Panicf("%s: %s", msg, err)
 	}
 }
-func PutUnnormalizedDataToQueue(unnormalizedStudents []dto.UnnormalizedStudent) {
+func PutUnnormalizedDataToQueue(unnormalizedStudents []dto.UnnormalizedStudent, encryptionType string) {
 	conn, err := amqp.Dial("amqp://lab2:lab2@176.124.200.41:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
@@ -39,6 +39,7 @@ func PutUnnormalizedDataToQueue(unnormalizedStudents []dto.UnnormalizedStudent) 
 	defer cancel()
 	for _, elem := range unnormalizedStudents {
 		byteData, err := json.Marshal(elem)
+
 		failOnError(err, "Failed to marshal data")
 
 		putDataToQueue(ch, ctx, q, byteData)
@@ -60,7 +61,7 @@ func putDataToQueue(ch *amqp.Channel, ctx context.Context, q amqp.Queue, body []
 
 }
 
-func GetUnnormalizedDataFromQueue() {
+func GetUnnormalizedDataFromQueue(encryptionType string) {
 	conn, err := amqp.Dial("amqp://lab2:lab2@176.124.200.41:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
