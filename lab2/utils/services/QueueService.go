@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"lab2/utils/dto"
@@ -17,9 +18,20 @@ func failOnError(err error, msg string) {
 	}
 }
 func PutUnnormalizedDataToQueue(unnormalizedStudents []dto.UnnormalizedStudent, encryptionType string) {
-	conn, err := amqp.Dial("amqp://lab2:lab2@176.124.200.41:5672/")
-	failOnError(err, "Failed to connect to RabbitMQ")
-	defer conn.Close()
+	var conn *amqp.Connection
+	if encryptionType == "tls" {
+		cert, err := tls.LoadX509KeyPair("../certs/client.pem", "../certs/client.key")
+		failOnError(err, "Failed to load keys")
+		config := tls.Config{Certificates: []tls.Certificate{cert}, InsecureSkipVerify: true}
+		conn, err = amqp.DialTLS("amqp://lab2:lab2@176.124.200.41:5672/", &config)
+		failOnError(err, "Failed to connect to RabbitMQ")
+		defer conn.Close()
+
+	} else if encryptionType == "aes" {
+		conn, err := amqp.Dial("amqp://lab2:lab2@176.124.200.41:5672/")
+		failOnError(err, "Failed to connect to RabbitMQ")
+		defer conn.Close()
+	}
 
 	ch, err := conn.Channel()
 	failOnError(err, "Failed to open a channel")
