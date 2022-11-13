@@ -9,7 +9,7 @@ import (
 
 func main() {
 	communicationType := flag.String("c", "queue", "Communication type")
-	encryptionType := flag.String("e", "aes", "Encryption type")
+	encryptionType := flag.String("e", "tls", "Encryption type")
 	flag.Parse()
 
 	fmt.Println(*communicationType, *encryptionType)

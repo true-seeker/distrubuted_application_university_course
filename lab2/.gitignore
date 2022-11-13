@@ -1,4 +1,4 @@
 utils/client/client
-server/server
+#server/server
 client/client
 #/certs
