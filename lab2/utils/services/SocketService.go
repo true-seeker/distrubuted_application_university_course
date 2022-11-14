@@ -46,7 +46,7 @@ func GetUnnormalizedDataFromSocket() {
 	tlsConf := &tls.Config{RootCAs: rootCas,
 		Certificates: []tls.Certificate{cert}}
 
-	listener, err := tls.Listen("tcp", "localhost:9876", tlsConf)
+	listener, err := tls.Listen("tcp", "0.0.0.0:9876", tlsConf)
 
 	for {
 		conn, err := listener.Accept()
