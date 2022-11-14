@@ -15,7 +15,7 @@ func PutUnnormalizedDataToSocket(unnormalizedStudents []dto.UnnormalizedStudent)
 	cert, err := tls.LoadX509KeyPair("../certs/client_v1234281.hosted-by-vdsina.ru_certificate.pem", "../certs/client_v1234281.hosted-by-vdsina.ru_key.pem")
 	failOnError(err, "Failed to load keys")
 	config := tls.Config{Certificates: []tls.Certificate{cert}, InsecureSkipVerify: true}
-	conn, err := tls.Dial("tcp", "localhost:9876", &config)
+	conn, err := tls.Dial("tcp", "176.124.200.41:9876", &config)
 	failOnError(err, "Failed to connect to socket")
 	defer conn.Close()
 
