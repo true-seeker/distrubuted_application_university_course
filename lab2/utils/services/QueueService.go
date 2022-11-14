@@ -20,20 +20,26 @@ func failOnError(err error, msg string) {
 	}
 }
 func PutUnnormalizedDataToQueue(unnormalizedStudents []dto.UnnormalizedStudent, encryptionType string) {
-	var conn *amqp.Connection
-	if encryptionType == "tls" {
-		cert, err := tls.LoadX509KeyPair("../certs/client.pem", "../certs/client.key")
-		failOnError(err, "Failed to load keys")
-		config := tls.Config{Certificates: []tls.Certificate{cert}, InsecureSkipVerify: true}
-		conn, err = amqp.DialTLS("amqp://lab2:lab2@176.124.200.41:5672/", &config)
-		failOnError(err, "Failed to connect to RabbitMQ")
-		defer conn.Close()
+	//if encryptionType == "tls" {
+	caCert, err := os.ReadFile("../certs/ca_certificate.pem")
+	failOnError(err, "Failed to open ca cert")
+	cert, err := tls.LoadX509KeyPair("../certs/client_v1234281.hosted-by-vdsina.ru_certificate.pem",
+		"../certs/client_v1234281.hosted-by-vdsina.ru_key.pem")
+	failOnError(err, "Failed to load keypair")
+	rootCas := x509.NewCertPool()
+	rootCas.AppendCertsFromPEM(caCert)
+	tlsConf := &tls.Config{RootCAs: rootCas,
+		Certificates: []tls.Certificate{cert}}
 
-	} else if encryptionType == "aes" {
-		conn, err := amqp.Dial("amqp://lab2:lab2@176.124.200.41:5672/")
-		failOnError(err, "Failed to connect to RabbitMQ")
-		defer conn.Close()
-	}
+	conn, err := amqp.DialTLS("amqps://lab2:lab2@176.124.200.41:5671/", tlsConf)
+	failOnError(err, "Failed to connect to RabbitMQ")
+	defer conn.Close()
+
+	//} else if encryptionType == "aes" {
+	//	conn, err := amqp.Dial("amqp://lab2:lab2@176.124.200.41:5672/")
+	//	failOnError(err, "Failed to connect to RabbitMQ")
+	//	defer conn.Close()
+	//}
 
 	ch, err := conn.Channel()
 	failOnError(err, "Failed to open a channel")
@@ -76,9 +82,10 @@ func putDataToQueue(ch *amqp.Channel, ctx context.Context, q amqp.Queue, body []
 }
 
 func GetUnnormalizedDataFromQueue(encryptionType string) {
-	caCert, err := os.ReadFile("../certs/RMQ-CA-cert.pem")
+	caCert, err := os.ReadFile("../certs/ca_certificate.pem")
 	failOnError(err, "Failed to open ca cert")
-	cert, err := tls.LoadX509KeyPair("../certs/RMQ-server-cert.pem", "../certs/RMQ-server-key.pem")
+	cert, err := tls.LoadX509KeyPair("../certs/client_v1234281.hosted-by-vdsina.ru_certificate.pem",
+		"../certs/client_v1234281.hosted-by-vdsina.ru_key.pem")
 	failOnError(err, "Failed to load keypair")
 	rootCas := x509.NewCertPool()
 	rootCas.AppendCertsFromPEM(caCert)

@@ -66,8 +66,10 @@ countryName_default         = US
 basicConstraints            = CA:TRUE
 subjectKeyIdentifier            = hash
 authorityKeyIdentifier          = keyid:always,issuer:always
-subjectAltName=IP:176.124.200.41
+subjectAltName			= IP:176.124.200.41
+
 [ v3_req ]
 basicConstraints            = CA:FALSE
 subjectKeyIdentifier            = hash
-
+[alt_names]
+IP.1 = 176.124.200.41
