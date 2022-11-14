@@ -38,8 +38,8 @@ func PutUnnormalizedDataToSocket(unnormalizedStudents []dto.UnnormalizedStudent)
 func GetUnnormalizedDataFromSocket() {
 	caCert, err := os.ReadFile("../certs/ca_certificate.pem")
 	failOnError(err, "Failed to open ca cert")
-	cert, err := tls.LoadX509KeyPair("../certs/client_v1234281.hosted-by-vdsina.ru_certificate.pem",
-		"../certs/client_v1234281.hosted-by-vdsina.ru_key.pem")
+	cert, err := tls.LoadX509KeyPair("../certs/server_v1234281.hosted-by-vdsina.ru_certificate.pem",
+		"../certs/server_v1234281.hosted-by-vdsina.ru_key.pem")
 	failOnError(err, "Failed to load keypair")
 	rootCas := x509.NewCertPool()
 	rootCas.AppendCertsFromPEM(caCert)
