@@ -1,9 +1,9 @@
 package main
 
 import (
+	"client/services"
 	"flag"
 	"fmt"
-	"lab2/client/services"
 )
 
 func main() {
