@@ -76,9 +76,9 @@ func putDataToQueue(ch *amqp.Channel, ctx context.Context, q amqp.Queue, body []
 }
 
 func GetUnnormalizedDataFromQueue(encryptionType string) {
-	caCert, err := os.ReadFile("../cert/RMQ-CA-cert.pem")
+	caCert, err := os.ReadFile("../certs/RMQ-CA-cert.pem")
 	failOnError(err, "Failed to open ca cert")
-	cert, err := tls.LoadX509KeyPair("../cert/RMQ-server-cert.pem", "../cert/RMQ-server-key.pem")
+	cert, err := tls.LoadX509KeyPair("../certs/RMQ-server-cert.pem", "../certs/RMQ-server-key.pem")
 	failOnError(err, "Failed to load keypair")
 	rootCas := x509.NewCertPool()
 	rootCas.AppendCertsFromPEM(caCert)
