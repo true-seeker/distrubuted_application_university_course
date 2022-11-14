@@ -8,14 +8,14 @@ import (
 
 func main() {
 	communicationType := flag.String("c", "queue", "Communication type")
-	encryptionType := flag.String("e", "aes", "Encryption type")
+	//encryptionType := flag.String("e", "aes", "Encryption type")
 	flag.Parse()
 
-	fmt.Println(*communicationType, *encryptionType)
+	fmt.Println(*communicationType)
 
 	if *communicationType == "queue" {
-		services.SendDataViaQueue(*encryptionType)
+		services.SendDataViaQueue()
 	} else if *communicationType == "socket" {
-		services.SendDataViaSocket(*encryptionType)
+		services.SendDataViaSocket()
 	}
 }

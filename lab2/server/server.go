@@ -9,16 +9,15 @@ import (
 
 func main() {
 	communicationType := flag.String("c", "queue", "Communication type")
-	encryptionType := flag.String("e", "tls", "Encryption type")
 	flag.Parse()
 
-	fmt.Println(*communicationType, *encryptionType)
+	fmt.Println(*communicationType)
 	orm.Migrate()
 
 	if *communicationType == "queue" {
-		services.AcceptDataFromQueue(*encryptionType)
+		services.AcceptDataFromQueue()
 	} else if *communicationType == "socket" {
-		services.AcceptDataFromSocket(*encryptionType)
+		services.AcceptDataFromSocket()
 	}
 
 }

@@ -11,25 +11,14 @@ import (
 	"net"
 )
 
-func PutUnnormalizedDataToSocket(unnormalizedStudents []dto.UnnormalizedStudent, encryptionType string) {
-	//conn, err := net.Dial("tcp", "176.124.200.41:9876")
-	var conn net.Conn
-	if encryptionType == "tls" {
-		cert, err := tls.LoadX509KeyPair("../certs/client.pem", "../certs/client.key")
-		failOnError(err, "Failed to load keys")
-		config := tls.Config{Certificates: []tls.Certificate{cert}, InsecureSkipVerify: true}
-		conn, err = tls.Dial("tcp", "localhost:9876", &config)
-		failOnError(err, "Failed to connect to socket")
-		defer conn.Close()
+func PutUnnormalizedDataToSocket(unnormalizedStudents []dto.UnnormalizedStudent) {
+	cert, err := tls.LoadX509KeyPair("../certs/client_v1234281.hosted-by-vdsina.ru_certificate.pem", "../certs/client_v1234281.hosted-by-vdsina.ru_key.pem")
+	failOnError(err, "Failed to load keys")
+	config := tls.Config{Certificates: []tls.Certificate{cert}, InsecureSkipVerify: true}
+	conn, err := tls.Dial("tcp", "localhost:9876", &config)
+	failOnError(err, "Failed to connect to socket")
+	defer conn.Close()
 
-		//state := conn.ConnectionState()
-		//log.Println("client: handshake: ", state.HandshakeComplete)
-
-	} else if encryptionType == "aes" {
-		conn, err := net.Dial("tcp", "localhost:9876")
-		failOnError(err, "Failed to connect to socket")
-		defer conn.Close()
-	}
 	for _, elem := range unnormalizedStudents {
 		byteData, err := json.Marshal(elem)
 		reader := bytes.NewReader(byteData)
@@ -39,18 +28,13 @@ func PutUnnormalizedDataToSocket(unnormalizedStudents []dto.UnnormalizedStudent,
 	}
 }
 
-func GetUnnormalizedDataFromSocket(encryptionType string) {
-	var listener net.Listener
-	if encryptionType == "tls" {
-		cert, err := tls.LoadX509KeyPair("../certs/server.pem", "../certs/server.key")
-		failOnError(err, "Failed to load keys")
-		config := tls.Config{Certificates: []tls.Certificate{cert}}
-		config.Rand = rand.Reader
-		listener, err = tls.Listen("tcp", "localhost:9876", &config)
-
-	} else if encryptionType == "aes" {
-		listener, _ = net.Listen("tcp", "localhost:9876") // открываем слушающий сокет
-	}
+func GetUnnormalizedDataFromSocket() {
+	cert, err := tls.LoadX509KeyPair("../certs/client_v1234281.hosted-by-vdsina.ru_certificate.pem",
+		"../certs/client_v1234281.hosted-by-vdsina.ru_key.pem")
+	failOnError(err, "Failed to load keys")
+	config := tls.Config{Certificates: []tls.Certificate{cert}}
+	config.Rand = rand.Reader
+	listener, err := tls.Listen("tcp", "localhost:9876", &config)
 
 	for {
 		conn, err := listener.Accept()

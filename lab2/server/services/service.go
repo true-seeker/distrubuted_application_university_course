@@ -2,10 +2,10 @@ package services
 
 import "lab2/utils/services"
 
-func AcceptDataFromQueue(encryptionType string) {
-	services.GetUnnormalizedDataFromQueue(encryptionType)
+func AcceptDataFromQueue() {
+	services.GetUnnormalizedDataFromQueue()
 }
 
-func AcceptDataFromSocket(encryptionType string) {
-	services.GetUnnormalizedDataFromSocket(encryptionType)
+func AcceptDataFromSocket() {
+	services.GetUnnormalizedDataFromSocket()
 }

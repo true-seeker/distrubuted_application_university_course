@@ -4,12 +4,12 @@ import (
 	"lab2/utils/services"
 )
 
-func SendDataViaQueue(encryptionType string) {
+func SendDataViaQueue() {
 	unnormalizedStudents := services.ReadSqlite("../db.db")
-	services.PutUnnormalizedDataToQueue(unnormalizedStudents, encryptionType)
+	services.PutUnnormalizedDataToQueue(unnormalizedStudents)
 }
 
-func SendDataViaSocket(encryptionType string) {
+func SendDataViaSocket() {
 	unnormalizedStudents := services.ReadSqlite("../db.db")
-	services.PutUnnormalizedDataToSocket(unnormalizedStudents, encryptionType)
+	services.PutUnnormalizedDataToSocket(unnormalizedStudents)
 }
