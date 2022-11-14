@@ -3,10 +3,12 @@ package services
 import (
 	"context"
 	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
 	"fmt"
 	"lab2/utils/dto"
 	"log"
+	"os"
 	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -74,7 +76,16 @@ func putDataToQueue(ch *amqp.Channel, ctx context.Context, q amqp.Queue, body []
 }
 
 func GetUnnormalizedDataFromQueue(encryptionType string) {
-	conn, err := amqp.Dial("amqp://lab2:lab2@176.124.200.41:5672/")
+	caCert, err := os.ReadFile("cert/RMQ-CA-cert.pem")
+	failOnError(err, "Failed to open ca cert")
+	cert, err := tls.LoadX509KeyPair("../cert/RMQ-server-cert.pem", "../cert/RMQ-server-key.pem")
+	failOnError(err, "Failed to load keypair")
+	rootCas := x509.NewCertPool()
+	rootCas.AppendCertsFromPEM(caCert)
+	tlsConf := &tls.Config{RootCAs: rootCas,
+		Certificates: []tls.Certificate{cert}}
+
+	conn, err := amqp.DialTLS("amqps://lab2:lab2@176.124.200.41:5671/", tlsConf)
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 
