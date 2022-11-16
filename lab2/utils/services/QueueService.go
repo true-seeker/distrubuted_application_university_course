@@ -2,13 +2,11 @@ package services
 
 import (
 	"context"
-	"crypto/tls"
-	"crypto/x509"
 	"encoding/json"
 	"fmt"
+	"lab2/utils/config"
 	"lab2/utils/dto"
 	"log"
-	"os"
 	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -20,15 +18,7 @@ func failOnError(err error, msg string) {
 	}
 }
 func PutUnnormalizedDataToQueue(unnormalizedStudents []dto.UnnormalizedStudent) {
-	caCert, err := os.ReadFile("../certs/ca_certificate.pem")
-	failOnError(err, "Failed to open ca cert")
-	cert, err := tls.LoadX509KeyPair("../certs/client_v1234281.hosted-by-vdsina.ru_certificate.pem",
-		"../certs/client_v1234281.hosted-by-vdsina.ru_key.pem")
-	failOnError(err, "Failed to load keypair")
-	rootCas := x509.NewCertPool()
-	rootCas.AppendCertsFromPEM(caCert)
-	tlsConf := &tls.Config{RootCAs: rootCas,
-		Certificates: []tls.Certificate{cert}}
+	tlsConf := GetClientCerts()
 
 	conn, err := amqp.DialTLS("amqps://lab2:lab2@176.124.200.41:5671/", tlsConf)
 	failOnError(err, "Failed to connect to RabbitMQ")
@@ -75,17 +65,12 @@ func putDataToQueue(ch *amqp.Channel, ctx context.Context, q amqp.Queue, body []
 }
 
 func GetUnnormalizedDataFromQueue() {
-	caCert, err := os.ReadFile("../certs/ca_certificate.pem")
-	failOnError(err, "Failed to open ca cert")
-	cert, err := tls.LoadX509KeyPair("../certs/client_v1234281.hosted-by-vdsina.ru_certificate.pem",
-		"../certs/client_v1234281.hosted-by-vdsina.ru_key.pem")
-	failOnError(err, "Failed to load keypair")
-	rootCas := x509.NewCertPool()
-	rootCas.AppendCertsFromPEM(caCert)
-	tlsConf := &tls.Config{RootCAs: rootCas,
-		Certificates: []tls.Certificate{cert}}
-
-	conn, err := amqp.DialTLS("amqps://lab2:lab2@176.124.200.41:5671/", tlsConf)
+	tlsConf := GetClientCerts()
+	conn, err := amqp.DialTLS(fmt.Sprintf("amqps://%s:%s@%s:%s/",
+		config.GetProperty("Queue", "user"),
+		config.GetProperty("Queue", "password"),
+		config.GetProperty("Queue", "address"),
+		config.GetProperty("Queue", "port")), tlsConf)
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 

@@ -1,12 +1,23 @@
 package orm
 
 import (
+	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"lab2/utils/config"
 	"time"
 )
 
-var PostgresConnectionString = "host=localhost user=postgres password=568219 dbname=golang port=5432 sslmode=disable TimeZone=Asia/Yekaterinburg"
+var PostgresConnectionString = fmt.Sprintf("host=localhost "+
+	"user=%s "+
+	"password=%s "+
+	"dbname=%s "+
+	"port=%s "+
+	"sslmode=disable TimeZone=Asia/Yekaterinburg",
+	config.GetProperty("DataBase", "user"),
+	config.GetProperty("DataBase", "password"),
+	config.GetProperty("DataBase", "dbname"),
+	config.GetProperty("DataBase", "port"))
 
 type Faculty struct {
 	gorm.Model
