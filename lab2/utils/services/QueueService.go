@@ -61,7 +61,6 @@ func putDataToQueue(ch *amqp.Channel, ctx context.Context, q amqp.Queue, body []
 		})
 	failOnError(err, "Failed to publish a message")
 	log.Printf(" [x] Sent %s\n", body)
-
 }
 
 func GetUnnormalizedDataFromQueue() {
@@ -105,7 +104,6 @@ func GetUnnormalizedDataFromQueue() {
 		for d := range msgs {
 			us := dto.UnnormalizedStudent{}
 			json.Unmarshal(d.Body, &us)
-			fmt.Println(us)
 			normalizeStudent(us)
 		}
 	}()
