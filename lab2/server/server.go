@@ -18,6 +18,8 @@ func main() {
 		services.AcceptDataFromQueue()
 	} else if *communicationType == "socket" {
 		services.AcceptDataFromSocket()
+	} else {
+		fmt.Println(fmt.Sprintf("Ключ  %s не найден", *communicationType))
 	}
 
 }

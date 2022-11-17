@@ -8,7 +8,6 @@ import (
 
 func main() {
 	communicationType := flag.String("c", "queue", "Communication type")
-	//encryptionType := flag.String("e", "aes", "Encryption type")
 	flag.Parse()
 
 	fmt.Println(*communicationType)
@@ -17,5 +16,7 @@ func main() {
 		services.SendDataViaQueue()
 	} else if *communicationType == "socket" {
 		services.SendDataViaSocket()
+	} else {
+		fmt.Println(fmt.Sprintf("Ключ  %s не найден", *communicationType))
 	}
 }
