@@ -104,6 +104,7 @@ func GetUnnormalizedDataFromQueue() {
 		for d := range msgs {
 			us := dto.UnnormalizedStudent{}
 			json.Unmarshal(d.Body, &us)
+			fmt.Println(us)
 			normalizeStudent(us)
 		}
 	}()
