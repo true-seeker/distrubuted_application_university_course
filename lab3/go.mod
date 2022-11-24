@@ -4,13 +4,15 @@ go 1.19
 
 require (
 	github.com/mattn/go-sqlite3 v1.14.16
-	github.com/rabbitmq/amqp091-go v1.5.0
+	google.golang.org/grpc v1.51.0
+	google.golang.org/protobuf v1.28.1
 	gopkg.in/ini.v1 v1.67.0
 	gorm.io/driver/postgres v1.4.5
 	gorm.io/gorm v1.24.2
 )
 
 require (
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.13.0 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
@@ -22,5 +24,8 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.4 // indirect
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/net v0.0.0-20220722155237-a158d28d115b // indirect
+	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f // indirect
+	golang.org/x/text v0.4.0 // indirect
+	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
 )

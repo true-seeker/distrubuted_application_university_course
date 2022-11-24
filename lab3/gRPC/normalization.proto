@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option go_package = "gRPC/normalization";
+
+package routeguide;
+
+service Normalization {
+  rpc SendUnnormalizedStudent(stream UnnormalizedStudent) returns (Response) {}
+}
+
+message UnnormalizedStudent {
+  int32 id = 1;
+  string name = 2;
+  string emails = 3;
+  string courses = 4;
+  string birthDate = 5;
+  string teachers = 6;
+  string faculty = 7;
+  string specialization = 8;
+}
+
+message Response {
+  string code = 1;
+  string message = 2;
+}
