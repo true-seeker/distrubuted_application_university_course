@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func normalizeStudent(student dto.UnnormalizedStudent) {
+func NormalizeStudent(student dto.UnnormalizedStudent) {
 	db, _ := gorm.Open(postgres.Open(orm.PostgresConnectionString), &gorm.Config{})
 
 	var faculty orm.Faculty

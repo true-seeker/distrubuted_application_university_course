@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option go_package = "gRPC/normalization";
 
-package routeguide;
+package normalization;
 
 service Normalization {
   rpc SendUnnormalizedStudent(stream UnnormalizedStudent) returns (Response) {}
