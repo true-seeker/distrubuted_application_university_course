@@ -46,7 +46,7 @@ func (s *normalizationServer) SendUnnormalizedStudent(stream pb.Normalization_Se
 
 func main() {
 	lis, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%s",
-		config.GetProperty("gRPC", "port")))
+		config.GetProperty("gRPC", "server_port")))
 
 	services.FailOnError(err, "failed to listen")
 

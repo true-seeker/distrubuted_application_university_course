@@ -44,7 +44,7 @@ func SendUnnormalizedStudent(client pb.NormalizationClient) {
 func main() {
 	conn, err := grpc.Dial(fmt.Sprintf("%s:%s",
 		config.GetProperty("gRPC", "server_address"),
-		config.GetProperty("gRPC", "port")),
+		config.GetProperty("gRPC", "server_port")),
 		grpc.WithTransportCredentials(credentials.NewTLS(services.GetClientCerts())))
 	services.FailOnError(err, "failed to dial")
 
