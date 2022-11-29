@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	pb "lab3/gRPC"
+	"lab3/utils/config"
 	"lab3/utils/services"
 	"log"
 	"time"
@@ -40,7 +42,10 @@ func SendUnnormalizedStudent(client pb.NormalizationClient) {
 }
 
 func main() {
-	conn, err := grpc.Dial("localhost:9876", grpc.WithTransportCredentials(credentials.NewTLS(services.GetClientCerts())))
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%s",
+		config.GetProperty("gRPC", "server_address"),
+		config.GetProperty("gRPC", "port")),
+		grpc.WithTransportCredentials(credentials.NewTLS(services.GetClientCerts())))
 	services.FailOnError(err, "failed to dial")
 
 	defer conn.Close()

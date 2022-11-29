@@ -6,6 +6,7 @@ import (
 	"google.golang.org/grpc/credentials"
 	"io"
 	pb "lab3/gRPC"
+	"lab3/utils/config"
 	"lab3/utils/dto"
 	"lab3/utils/services"
 	"net"
@@ -44,7 +45,9 @@ func (s *normalizationServer) SendUnnormalizedStudent(stream pb.Normalization_Se
 }
 
 func main() {
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", 9876))
+	lis, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%s",
+		config.GetProperty("gRPC", "port")))
+
 	services.FailOnError(err, "failed to listen")
 
 	grpcServer := grpc.NewServer(grpc.Creds(credentials.NewTLS(services.GetServerCerts())))
